@@ -1,4 +1,5 @@
 """Tests for clawplay.clawplay — HTTP client."""
+
 from unittest.mock import MagicMock
 
 from clawplay.clawplay import Clawplay
@@ -11,6 +12,7 @@ class TestClawplayInit:
         import importlib
 
         from clawplay import clawplay as cp_mod
+
         importlib.reload(cp_mod)
         c = cp_mod.Clawplay()
         assert c.base_url == "http://example:1234"
@@ -43,7 +45,12 @@ class TestClawplayEval:
         c.session = mock_session
         result = c.eval("https://example.com", "return 1;")
         assert result["ok"] is False
-        assert "transport" in result["error"] or "connection refused" in result["error"] or "OSError" in result["error"] or result["error"]  # any error string
+        assert (
+            "transport" in result["error"]
+            or "connection refused" in result["error"]
+            or "OSError" in result["error"]
+            or result["error"]
+        )  # any error string
 
 
 class TestClawplayHealth:

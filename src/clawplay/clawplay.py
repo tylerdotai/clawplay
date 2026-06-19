@@ -50,7 +50,11 @@ class Clawplay:
         try:
             body = r.json()
         except ValueError:
-            return {"ok": False, "error": f"non-json response (HTTP {r.status_code})", "raw": r.text[:400]}
+            return {
+                "ok": False,
+                "error": f"non-json response (HTTP {r.status_code})",
+                "raw": r.text[:400],
+            }
         body.setdefault("status", r.status_code)
         return body
 
@@ -64,7 +68,11 @@ class Clawplay:
         try:
             body = r.json()
         except ValueError:
-            return {"ok": False, "error": f"non-json response (HTTP {r.status_code})", "raw": r.text[:400]}
+            return {
+                "ok": False,
+                "error": f"non-json response (HTTP {r.status_code})",
+                "raw": r.text[:400],
+            }
         body.setdefault("status", r.status_code)
         return body
 
@@ -75,21 +83,39 @@ class Clawplay:
 
     def eval(self, url: str, js: str, timeout_ms: int = 18000) -> dict:
         """Evaluate JS on a page. Returns {"ok": True, "content": <JSON result>, ...}."""
-        return self._post("/eval", {"url": url, "js": js, "timeoutMs": timeout_ms},
-                          timeout=max(timeout_ms / 1000 + 5, 10))
+        return self._post(
+            "/eval",
+            {"url": url, "js": js, "timeoutMs": timeout_ms},
+            timeout=max(timeout_ms / 1000 + 5, 10),
+        )
 
     def extract(self, url: str, fmt: str = "markdown", timeout_ms: int = 20000) -> dict:
-        return self._post("/extract", {"url": url, "format": fmt, "timeoutMs": timeout_ms},
-                          timeout=max(timeout_ms / 1000 + 5, 10))
+        return self._post(
+            "/extract",
+            {"url": url, "format": fmt, "timeoutMs": timeout_ms},
+            timeout=max(timeout_ms / 1000 + 5, 10),
+        )
 
-    def screenshot(self, url: str, out_path: str, *,
-                   full_page: bool = True, viewport: tuple = (1280, 1800),
-                   wait_ms: int = 800) -> dict:
-        return self._post("/screenshot", {
-            "url": url, "fullPage": full_page,
-            "viewport": {"width": viewport[0], "height": viewport[1]},
-            "waitMs": wait_ms, "outPath": out_path,
-        }, timeout=max(wait_ms / 1000 + 15, 20))
+    def screenshot(
+        self,
+        url: str,
+        out_path: str,
+        *,
+        full_page: bool = True,
+        viewport: tuple = (1280, 1800),
+        wait_ms: int = 800,
+    ) -> dict:
+        return self._post(
+            "/screenshot",
+            {
+                "url": url,
+                "fullPage": full_page,
+                "viewport": {"width": viewport[0], "height": viewport[1]},
+                "waitMs": wait_ms,
+                "outPath": out_path,
+            },
+            timeout=max(wait_ms / 1000 + 15, 20),
+        )
 
 
 def health() -> dict:

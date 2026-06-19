@@ -1,4 +1,5 @@
 """Tests for clawplay.report — scoreboard renderer."""
+
 from clawplay.report import (
     BG_PAGE,
     FINAL_GREY,
@@ -14,11 +15,16 @@ from clawplay.report import (
 
 class TestNormalizeGame:
     def test_basic(self):
-        g = _normalize_game({
-            "home": "Mexico", "away": "Korea",
-            "home_score": "1", "away_score": "0",
-            "status": "FT", "sport": "worldcup",
-        })
+        g = _normalize_game(
+            {
+                "home": "Mexico",
+                "away": "Korea",
+                "home_score": "1",
+                "away_score": "0",
+                "status": "FT",
+                "sport": "worldcup",
+            }
+        )
         assert g["is_final"] is True
         assert g["status_label"] == "FINAL"
         assert g["status_color"] == FINAL_GREY
@@ -38,10 +44,14 @@ class TestNormalizeGame:
         assert g["minute_or_clock"] == "Half"
 
     def test_upcoming_renders_local_kickoff(self):
-        g = _normalize_game({
-            "home": "USA", "away": "Mexico",
-            "status": "PRE", "kickoff": "2026-06-19T03:00:00Z",
-        })
+        g = _normalize_game(
+            {
+                "home": "USA",
+                "away": "Mexico",
+                "status": "PRE",
+                "kickoff": "2026-06-19T03:00:00Z",
+            }
+        )
         assert g["is_upcoming"] is True
         assert g["status_label"] == "PRE"
         # Should include "·" separator (local format string)
@@ -53,7 +63,13 @@ class TestNormalizeGame:
         assert g["minute_or_clock"] == "Q3 4:12"
 
     def test_dict_team_input(self):
-        g = _normalize_game({"home": {"name": "Lakers", "score": 98}, "away": {"name": "Celtics", "score": 95}, "status": "Q4"})
+        g = _normalize_game(
+            {
+                "home": {"name": "Lakers", "score": 98},
+                "away": {"name": "Celtics", "score": 95},
+                "status": "Q4",
+            }
+        )
         assert g["home"]["name"] == "Lakers"
         assert g["home"]["score"] == 98
 
@@ -65,7 +81,9 @@ class TestSummaryCounts:
             _normalize_game({"home": "A", "away": "B", "status": "FT"}),
             # For live: must include the apostrophe marker so _normalize_game detects it
             _normalize_game({"home": "A", "away": "B", "status": "67'"}),
-            _normalize_game({"home": "A", "away": "B", "status": "NS", "kickoff": "2026-06-19T03:00:00Z"}),
+            _normalize_game(
+                {"home": "A", "away": "B", "status": "NS", "kickoff": "2026-06-19T03:00:00Z"}
+            ),
         ]
         c = _summary_counts(games)
         assert c["final"] == 2
@@ -75,7 +93,16 @@ class TestSummaryCounts:
 
 class TestRenderReport:
     def test_renders_html(self):
-        games = [{"home": "Mexico", "away": "Korea", "home_score": "1", "away_score": "0", "status": "FT", "sport": "worldcup"}]
+        games = [
+            {
+                "home": "Mexico",
+                "away": "Korea",
+                "home_score": "1",
+                "away_score": "0",
+                "status": "FT",
+                "sport": "worldcup",
+            }
+        ]
         html = render_report(games, title="Test", subtitle="Subtitle")
         assert html.startswith("<!DOCTYPE html>")
         assert "Test" in html

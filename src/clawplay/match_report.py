@@ -50,17 +50,17 @@ FMHY_URLS = {
 
 BBC_URLS = {
     "soccer_live": "https://www.bbc.com/sport/football/scores-fixtures",
-    "epl":         "https://www.bbc.com/sport/football/premier-league/scores-fixtures",
-    "worldcup":    "https://www.bbc.com/sport/football/world-cup/scores-fixtures",
-    "nfl":         "https://www.bbc.com/sport/american-football/nfl/scores-fixtures",
-    "nba":         "https://www.bbc.com/sport/basketball/nba/scores-fixtures",
+    "epl": "https://www.bbc.com/sport/football/premier-league/scores-fixtures",
+    "worldcup": "https://www.bbc.com/sport/football/world-cup/scores-fixtures",
+    "nfl": "https://www.bbc.com/sport/american-football/nfl/scores-fixtures",
+    "nba": "https://www.bbc.com/sport/basketball/nba/scores-fixtures",
 }
 
 WIKI_URLS = {
     "worldcup": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup",
-    "epl":      "https://en.wikipedia.org/wiki/Premier_League",
-    "nba":      "https://en.wikipedia.org/wiki/NBA",
-    "nfl":      "https://en.wikipedia.org/wiki/NFL",
+    "epl": "https://en.wikipedia.org/wiki/Premier_League",
+    "nba": "https://en.wikipedia.org/wiki/NBA",
+    "nfl": "https://en.wikipedia.org/wiki/NFL",
 }
 
 _PRIMARY_URLS: Dict[str, str] = {}
@@ -93,6 +93,7 @@ SOURCE_URLS = _build_source_urls()
 
 
 # ---- Match data model ------------------------------------------------------
+
 
 class MatchReport:
     """A single match with data aggregated from multiple sources."""
@@ -162,6 +163,7 @@ class MatchReport:
 
 # ---- Aggregator ------------------------------------------------------------
 
+
 class Aggregator:
     """Pulls data from multiple sources for a single match."""
 
@@ -225,7 +227,9 @@ class Aggregator:
         match.add_note(f"aggregated from {len(match.sources)} sources")
         return match
 
-    def _fetch_source(self, url: str, match: MatchReport, kind: str) -> Tuple[bool, Any, Optional[str]]:
+    def _fetch_source(
+        self, url: str, match: MatchReport, kind: str
+    ) -> Tuple[bool, Any, Optional[str]]:
         tmpl = SOURCE_JS_TEMPLATES.get(kind, SOURCE_JS_TEMPLATES["primary"])
         js = tmpl.replace("__HOME__", match.home or "").replace("__AWAY__", match.away or "")
         timeout = 30000 if kind in ("fmhy", "wiki", "bbc") else 18000
@@ -372,8 +376,16 @@ def _fmhy_template_for_sport(sport: str) -> str:
 
 # ---- Rich content extraction -----------------------------------------------
 
-PREVIEW_KEYS = ["head_to_head", "form", "lineups", "key_players", "prediction", "odds", "where_to_watch"]
-RECAP_KEYS   = ["scorers", "key_moments", "stats", "man_of_the_match", "table_impact", "what_next"]
+PREVIEW_KEYS = [
+    "head_to_head",
+    "form",
+    "lineups",
+    "key_players",
+    "prediction",
+    "odds",
+    "where_to_watch",
+]
+RECAP_KEYS = ["scorers", "key_moments", "stats", "man_of_the_match", "table_impact", "what_next"]
 
 
 def extract_rich_content(sources: List[Dict[str, Any]]) -> Dict[str, List[Any]]:
@@ -411,6 +423,7 @@ def extract_rich_content(sources: List[Dict[str, Any]]) -> Dict[str, List[Any]]:
 
 # ---- RENDERING — Spark handout aesthetic ----------------------------------
 
+
 def _ko_str(match: MatchReport) -> str:
     """Format kickoff time in viewer's local TZ."""
     if not match.kickoff:
@@ -424,8 +437,10 @@ def _ko_str(match: MatchReport) -> str:
 def _meta_row(label: str, value: str) -> str:
     if not value:
         return ""
-    return (f'<div class="meta-row"><span class="meta-label">{_html.escape(label)}</span>'
-            f'<span class="meta-val">{value}</span></div>')
+    return (
+        f'<div class="meta-row"><span class="meta-label">{_html.escape(label)}</span>'
+        f'<span class="meta-val">{value}</span></div>'
+    )
 
 
 def _handout_topline(label: str, generated: str) -> str:
@@ -463,12 +478,12 @@ def _handout_header(match: MatchReport, mode_label: str) -> str:
       <div class="speaker-card">
         <div class="label">Away</div>
         <div class="name">{_html.escape(match.away)}</div>
-        <div class="role">{_html.escape(match.sport or '').title()}{(' · ' + _html.escape(venue)) if venue else ''}</div>
+        <div class="role">{_html.escape(match.sport or "").title()}{(" · " + _html.escape(venue)) if venue else ""}</div>
       </div>
       <div class="speaker-card">
         <div class="label">Home</div>
         <div class="name">{_html.escape(match.home)}</div>
-        <div class="role">{_html.escape(venue) if venue else '—'}</div>
+        <div class="role">{_html.escape(venue) if venue else "—"}</div>
       </div>
     </div>
     """
@@ -481,9 +496,14 @@ def _handout_stats(match: MatchReport) -> str:
     ko_time = format_local(ko_dt, "%-I:%M %p") if ko_dt else ""
 
     countdown = countdown_to_kickoff(match.kickoff or "") if match.is_preview else ""
-    status_disp = "FULL TIME" if match.is_final else (
-        match.status if match.status and match.status != "TBD" else
-        (countdown.upper() if countdown else "PREVIEW")
+    status_disp = (
+        "FULL TIME"
+        if match.is_final
+        else (
+            match.status
+            if match.status and match.status != "TBD"
+            else (countdown.upper() if countdown else "PREVIEW")
+        )
     )
 
     return f"""
@@ -502,15 +522,19 @@ def _handout_thesis(match: MatchReport, content: Dict[str, List[Any]]) -> str:
     if match.is_final:
         # Final: lead with scoreline headline
         if match.home_score not in (None, "") and match.away_score not in (None, ""):
-            body = (f"{_html.escape(match.away)} {_html.escape(str(match.away_score))} · "
-                    f"{_html.escape(match.home)} {_html.escape(str(match.home_score))} · FULL TIME")
+            body = (
+                f"{_html.escape(match.away)} {_html.escape(str(match.away_score))} · "
+                f"{_html.escape(match.home)} {_html.escape(str(match.home_score))} · FULL TIME"
+            )
         else:
             body = "Match complete."
     elif match.is_live:
         if match.home_score not in (None, "") and match.away_score not in (None, ""):
-            body = (f"{_html.escape(match.away)} {_html.escape(str(match.away_score))} · "
-                    f"{_html.escape(match.home)} {_html.escape(str(match.home_score))} · "
-                    f"{_html.escape(match.status or 'LIVE')}")
+            body = (
+                f"{_html.escape(match.away)} {_html.escape(str(match.away_score))} · "
+                f"{_html.escape(match.home)} {_html.escape(str(match.home_score))} · "
+                f"{_html.escape(match.status or 'LIVE')}"
+            )
         else:
             body = "Live now."
     else:
@@ -608,7 +632,9 @@ def _handout_section_box(title: str, items: List[str], side: str = "left") -> st
     if not items:
         return ""
     body = "\n".join(f"<li>{_html.escape(it)}</li>" for it in items)
-    return f'<div class="box"><div class="box-head">{_html.escape(title)}</div><ul>{body}</ul></div>'
+    return (
+        f'<div class="box"><div class="box-head">{_html.escape(title)}</div><ul>{body}</ul></div>'
+    )
 
 
 def _handout_links_box(title: str, links: List[Dict[str, str]]) -> str:
@@ -616,8 +642,9 @@ def _handout_links_box(title: str, links: List[Dict[str, str]]) -> str:
         return ""
     chips = "\n".join(
         f'<a class="chip" href="{_html.escape(link.get("href", ""))}" target="_blank" rel="noopener">'
-        f'{_html.escape(link.get("text", "(link)"))}</a>'
-        for link in links if link.get("href")
+        f"{_html.escape(link.get('text', '(link)'))}</a>"
+        for link in links
+        if link.get("href")
     )
     return f'<div class="box"><div class="box-head">{_html.escape(title)}</div><div class="chips">{chips}</div></div>'
 
@@ -644,13 +671,20 @@ def _handout_content(match: MatchReport, content: Dict[str, List[Any]]) -> str:
         boxes.append(_handout_section_box("Table Impact", content.get("table_impact", [])))
         boxes.append(_handout_section_box("What's Next", content.get("what_next", [])))
     else:
-        boxes.append(_handout_section_box("Live Updates", content.get("key_moments", []) or ["Match in progress — refresh for live data."]))
+        boxes.append(
+            _handout_section_box(
+                "Live Updates",
+                content.get("key_moments", []) or ["Match in progress — refresh for live data."],
+            )
+        )
 
     body = "\n".join(b for b in boxes if b)
     if not body:
-        body = ('<div class="box"><div class="box-head">Sources</div>'
-                '<div class="note">Sources did not return content for this match yet. '
-                'The aggregator needs a kickoff time and at least one source with structured data.</div></div>')
+        body = (
+            '<div class="box"><div class="box-head">Sources</div>'
+            '<div class="note">Sources did not return content for this match yet. '
+            "The aggregator needs a kickoff time and at least one source with structured data.</div></div>"
+        )
     return f'<div class="content">{body}</div>'
 
 
@@ -658,7 +692,7 @@ def _handout_next(match: MatchReport) -> str:
     """Three next-up cards."""
     cards = []
     if match.is_preview:
-        cards.append(("Coming up", f"Kickoff { _ko_str(match) }"))
+        cards.append(("Coming up", f"Kickoff {_ko_str(match)}"))
         cards.append(("Where to watch", "FMHY-sourced streams"))
         cards.append(("Refresh", "Live data on game day"))
     elif match.is_final:
@@ -681,14 +715,14 @@ def _handout_sources(match: MatchReport) -> str:
         return ""
     chips = "\n".join(
         f'<a class="chip" href="{_html.escape(s["url"])}" target="_blank" rel="noopener">'
-        f'{_html.escape(s["name"])} ↗</a>'
+        f"{_html.escape(s['name'])} ↗</a>"
         for s in match.sources
     )
     return f"""
     <div class="content">
       <div class="box"><div class="box-head">Sources</div><div class="chips">{chips}</div></div>
       <div class="box"><div class="box-head">Aggregator Notes</div>
-      {''.join(f'<div class="note">{_html.escape(n)}</div>' for n in match.notes[:3]) or '<div class="note">All sources fetched successfully.</div>'}
+      {"".join(f'<div class="note">{_html.escape(n)}</div>' for n in match.notes[:3]) or '<div class="note">All sources fetched successfully.</div>'}
       </div>
     </div>
     """
@@ -696,9 +730,13 @@ def _handout_sources(match: MatchReport) -> str:
 
 def _handout_cta(match: MatchReport) -> str:
     label = "PREVIEW" if match.is_preview else ("FULL TIME" if match.is_final else "LIVE")
-    msg = ("Refresh for live updates" if match.is_live else
-           f"Score sourced from {len(match.sources)} sources" if match.is_final else
-           f"Kickoff { _ko_str(match) }")
+    msg = (
+        "Refresh for live updates"
+        if match.is_live
+        else f"Score sourced from {len(match.sources)} sources"
+        if match.is_final
+        else f"Kickoff {_ko_str(match)}"
+    )
     return f"""
     <div class="cta">
       <strong>{_html.escape(msg)}</strong>
@@ -707,7 +745,9 @@ def _handout_cta(match: MatchReport) -> str:
     """
 
 
-def render_match_report(match: MatchReport, *, title: Optional[str] = None, generated_at=None) -> str:
+def render_match_report(
+    match: MatchReport, *, title: Optional[str] = None, generated_at=None
+) -> str:
     """Render a complete match report HTML — handout quality, 8.5×11 sheet."""
     if generated_at is None:
         generated_at = local_now()
@@ -757,6 +797,7 @@ def write_match_report(match: MatchReport, out_path, **kwargs) -> str:
 
 # ---- Find a specific match from a scoreboard -------------------------------
 
+
 def find_match(games: List[dict], query: str) -> Optional[MatchReport]:
     q = query.lower()
     for g in games:
@@ -785,6 +826,7 @@ def find_match(games: List[dict], query: str) -> Optional[MatchReport]:
 
 
 # ---- CLI -------------------------------------------------------------------
+
 
 def _cli(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
@@ -830,14 +872,14 @@ def _cli(argv: Optional[List[str]] = None) -> int:
     else:
         all_results = scores.all_today()
         games = []
-        for d in (all_results.get("us") or []):
+        for d in all_results.get("us") or []:
             if isinstance(d, dict):
                 s = d.get("sport", "")
                 for g in d.get("games", []):
                     if isinstance(g, dict) and not g.get("sport"):
                         g["sport"] = s
                 games.extend(d.get("games", []))
-        for d in (all_results.get("soccer") or []):
+        for d in all_results.get("soccer") or []:
             if isinstance(d, dict):
                 s = d.get("sport", "")
                 for g in d.get("games", []):
@@ -877,7 +919,9 @@ def _cli(argv: Optional[List[str]] = None) -> int:
 
     if args.json:
         json_path = out.rsplit(".", 1)[0] + ".json"
-        Path(json_path).write_text(json.dumps(match.to_dict(), indent=2, default=str), encoding="utf-8")
+        Path(json_path).write_text(
+            json.dumps(match.to_dict(), indent=2, default=str), encoding="utf-8"
+        )
         print(f"✓ Raw match data → {json_path}")
 
     return 0

@@ -1,4 +1,5 @@
 """Tests for clawplay.time_utils — local-time helpers."""
+
 import datetime as _dt
 
 from clawplay.time_utils import (
@@ -80,19 +81,31 @@ class TestCountdownToKickoff:
         assert countdown_to_kickoff(past) == "KICKOFF"
 
     def test_days_format(self):
-        future = (_dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(days=3, hours=2)).isoformat().replace("+00:00", "Z")
+        future = (
+            (_dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(days=3, hours=2))
+            .isoformat()
+            .replace("+00:00", "Z")
+        )
         out = countdown_to_kickoff(future)
         assert "d" in out
         assert out.startswith("3")
 
     def test_hours_format(self):
-        future = (_dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(hours=5, minutes=30)).isoformat().replace("+00:00", "Z")
+        future = (
+            (_dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(hours=5, minutes=30))
+            .isoformat()
+            .replace("+00:00", "Z")
+        )
         out = countdown_to_kickoff(future)
         assert "h" in out
         assert "m" in out
 
     def test_minutes_format(self):
-        future = (_dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(minutes=23)).isoformat().replace("+00:00", "Z")
+        future = (
+            (_dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(minutes=23))
+            .isoformat()
+            .replace("+00:00", "Z")
+        )
         out = countdown_to_kickoff(future)
         assert out.endswith("m")
         assert "h" not in out

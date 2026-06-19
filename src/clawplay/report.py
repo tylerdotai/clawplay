@@ -53,7 +53,11 @@ UPCOMING_STATUSES = {"NS", "PRE", "PRE_GAME", "SCHEDULED", "TBD", "POSTPONED"}
 
 
 def _is_live(status: str) -> bool:
-    return status.upper() in LIVE_STATUSES or "LIVE" in status.upper() or "IN_PROGRESS" in status.upper()
+    return (
+        status.upper() in LIVE_STATUSES
+        or "LIVE" in status.upper()
+        or "IN_PROGRESS" in status.upper()
+    )
 
 
 def _is_final(status: str) -> bool:
@@ -77,6 +81,7 @@ def _badge_for(status: str) -> tuple[str, str]:
 
 
 # ---- Data normalization ----------------------------------------------------
+
 
 def _normalize_game(g: dict) -> dict:
     """Coerce a raw game dict into a render-ready dict.
@@ -177,6 +182,7 @@ def _normalize_team(name_or_dict, score=None) -> dict:
 
 
 # ---- Shared CSS tokens (used by both report.py and match_report.py) --------
+
 
 def _design_tokens_css() -> str:
     return f"""
@@ -614,6 +620,7 @@ h1 em { color: var(--red); font-style: italic; font-weight: 700; }
 
 # ---- RENDERERS -------------------------------------------------------------
 
+
 def render_css() -> str:
     """Combined CSS for both screen and print modes (one stylesheet handles both)."""
     return _design_tokens_css() + "\n" + _SCREEN_CSS + "\n" + _HANDOUT_CSS
@@ -648,11 +655,21 @@ def _render_team(team: dict, side: str, opponent_score, is_final: bool) -> str:
 
 
 def _render_game_screen(g: dict) -> str:
-    cls = "live" if g["is_live"] else "final" if g["is_final"] else "upcoming" if g["is_upcoming"] else ""
+    cls = (
+        "live"
+        if g["is_live"]
+        else "final"
+        if g["is_final"]
+        else "upcoming"
+        if g["is_upcoming"]
+        else ""
+    )
     badge_cls = cls if cls else ""
-    badge_html = f'<span class="badge {badge_cls}">' + (
-        '<span class="live-dot"></span>LIVE' if g["is_live"] else g["status_label"]
-    ) + '</span>'
+    badge_html = (
+        f'<span class="badge {badge_cls}">'
+        + ('<span class="live-dot"></span>LIVE' if g["is_live"] else g["status_label"])
+        + "</span>"
+    )
 
     clock = ""
     if g["minute_or_clock"]:
@@ -683,10 +700,10 @@ def _render_game_screen(g: dict) -> str:
 
 def _summary_counts(games: List[dict]) -> dict:
     return {
-        "live":    sum(1 for g in games if g["is_live"]),
-        "final":   sum(1 for g in games if g["is_final"]),
-        "upcoming":sum(1 for g in games if g["is_upcoming"]),
-        "other":   sum(1 for g in games if not (g["is_live"] or g["is_final"] or g["is_upcoming"])),
+        "live": sum(1 for g in games if g["is_live"]),
+        "final": sum(1 for g in games if g["is_final"]),
+        "upcoming": sum(1 for g in games if g["is_upcoming"]),
+        "other": sum(1 for g in games if not (g["is_live"] or g["is_final"] or g["is_upcoming"])),
     }
 
 
@@ -731,13 +748,13 @@ def render_report(
 
     # Sections
     section_titles = {
-        "live":     ("Live Now",   f"{counts['live']} games in progress"),
-        "upcoming": ("Upcoming",   f"{counts['upcoming']} games on deck"),
-        "final":    ("Final",      f"{counts['final']} games decided"),
-        "other":    ("Other",      f"{counts['other']} games"),
+        "live": ("Live Now", f"{counts['live']} games in progress"),
+        "upcoming": ("Upcoming", f"{counts['upcoming']} games on deck"),
+        "final": ("Final", f"{counts['final']} games decided"),
+        "other": ("Other", f"{counts['other']} games"),
     }
     sections_html = []
-    for key, items in (groups.items() if isinstance(groups, dict) else []):
+    for key, items in groups.items() if isinstance(groups, dict) else []:
         if not items:
             continue
         title_txt, sub = section_titles.get(key, (key.title(), ""))
@@ -745,9 +762,9 @@ def render_report(
         sections_html.append(
             f'<div class="section"><div class="section-title">'
             f'<span class="num">{len(items):02d}</span> '
-            f'{_html.escape(title_txt.upper())} '
+            f"{_html.escape(title_txt.upper())} "
             f'<span style="margin-left:auto;font-weight:400;color:var(--dim);letter-spacing:.12em;">'
-            f'{_html.escape(sub)}</span></div>{body}</div>'
+            f"{_html.escape(sub)}</span></div>{body}</div>"
         )
     if not sections_html:
         sections_html = [
@@ -758,9 +775,9 @@ def render_report(
     # Summary cells
     summary_html = f"""
     <div class="summary">
-      <div class="summary-cell"><span class="summary-num live">{counts['live']}</span><span class="summary-lbl">Live</span></div>
-      <div class="summary-cell"><span class="summary-num upcoming">{counts['upcoming']}</span><span class="summary-lbl">Upcoming</span></div>
-      <div class="summary-cell"><span class="summary-num final">{counts['final']}</span><span class="summary-lbl">Final</span></div>
+      <div class="summary-cell"><span class="summary-num live">{counts["live"]}</span><span class="summary-lbl">Live</span></div>
+      <div class="summary-cell"><span class="summary-num upcoming">{counts["upcoming"]}</span><span class="summary-lbl">Upcoming</span></div>
+      <div class="summary-cell"><span class="summary-num final">{counts["final"]}</span><span class="summary-lbl">Final</span></div>
       <div class="summary-cell"><span class="summary-num">{len(normed)}</span><span class="summary-lbl">Total</span></div>
     </div>
     """
@@ -777,12 +794,12 @@ def render_report(
     <header>
       <div class="eyebrow">Multi-Sport Scoreboard</div>
       <h1>{_html.escape(title)}</h1>
-      {f'<div class="subtitle">{_html.escape(subtitle)}</div>' if subtitle else ''}
+      {f'<div class="subtitle">{_html.escape(subtitle)}</div>' if subtitle else ""}
     </header>
     """
 
     container_open = '<div class="sheet">' if sheet_mode else '<div class="container">'
-    container_close = '</div>'
+    container_close = "</div>"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -798,11 +815,11 @@ def render_report(
 {container_open}
 {headline_html}
 {summary_html}
-{''.join(sections_html)}
+{"".join(sections_html)}
 <footer>
   Generated {_html.escape(stamp)} CT · powered by
   <a href="https://github.com/tylerdotai/clawplay">clawplay</a>
-  · {len(normed)} games · {counts['live']} live · {counts['final']} final
+  · {len(normed)} games · {counts["live"]} live · {counts["final"]} final
 </footer>
 {container_close}
 </body>
@@ -813,6 +830,7 @@ def render_report(
 def write_report(games, out_path, **kwargs) -> str:
     """Render the report to a file. Returns absolute output path."""
     from pathlib import Path
+
     html_doc = render_report(games, **kwargs)
     out = Path(out_path).expanduser().resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -822,12 +840,16 @@ def write_report(games, out_path, **kwargs) -> str:
 
 # ---- CLI -------------------------------------------------------------------
 
+
 def _cli(argv=None) -> int:
     import argparse
     import os
     import re
     import sys
-    parser = argparse.ArgumentParser(prog="clawplay-report", description="Generate a live scoreboard HTML report.")
+
+    parser = argparse.ArgumentParser(
+        prog="clawplay-report", description="Generate a live scoreboard HTML report."
+    )
     parser.add_argument("sport", help="Sport key or 'all'")
     parser.add_argument("-o", "--output", default=None, help="Output HTML path")
     parser.add_argument("--title", default=None, help="Custom report title")
@@ -847,14 +869,14 @@ def _cli(argv=None) -> int:
     if args.sport == "all":
         result = scores.all_today()
         games: list = []
-        for d in (result.get("us") or []):
+        for d in result.get("us") or []:
             if isinstance(d, dict):
                 s = d.get("sport", "")
                 for g in d.get("games", []):
                     if isinstance(g, dict):
                         g.setdefault("sport", s)
                         games.append(g)
-        for d in (result.get("soccer") or []):
+        for d in result.get("soccer") or []:
             if isinstance(d, dict):
                 s = d.get("sport", "")
                 for g in d.get("games", []):
@@ -884,8 +906,9 @@ def _cli(argv=None) -> int:
     if args.find:
         q = args.find.lower()
         games = [
-            g for g in games
-            if q in f"{g.get('home','')} {g.get('away','')} {g.get('competition','')}".lower()
+            g
+            for g in games
+            if q in f"{g.get('home', '')} {g.get('away', '')} {g.get('competition', '')}".lower()
         ]
 
     # Output path
@@ -894,14 +917,21 @@ def _cli(argv=None) -> int:
         safe = re.sub(r"[^a-zA-Z0-9]+", "_", args.sport).strip("_").lower()
         args.output = f"./clawplay_{safe}_{stamp}.html"
 
-    out = write_report(games, args.output, title=title, subtitle=args.subtitle,
-                       group_by=args.group_by, sheet_mode=args.sheet)
+    out = write_report(
+        games,
+        args.output,
+        title=title,
+        subtitle=args.subtitle,
+        group_by=args.group_by,
+        sheet_mode=args.sheet,
+    )
     size_kb = os.path.getsize(out) / 1024
     print(f"✓ {len(games)} games → {out} ({size_kb:.1f} KB)")
     print(f"  Title: {title}")
     if args.json:
         jp = out.rsplit(".", 1)[0] + ".json"
         from pathlib import Path
+
         Path(jp).write_text(json.dumps(games, indent=2, default=str), encoding="utf-8")
         print(f"✓ Raw data → {jp}")
     return 0
@@ -909,6 +939,7 @@ def _cli(argv=None) -> int:
 
 def _cli_entry():
     import sys
+
     sys.exit(_cli())
 
 

@@ -1,4 +1,5 @@
 """Tests for clawplay.match_report — match preview/recap generator."""
+
 from unittest.mock import MagicMock
 
 from clawplay.match_report import (
@@ -71,13 +72,17 @@ class TestFindMatch:
         assert result is None
 
     def test_propagates_sport_and_kickoff(self):
-        games = [{
-            "home": "USA", "away": "Mexico",
-            "sport": "worldcup", "status": "PRE",
-            "kickoff": "2026-06-19T03:00:00Z",
-            "competition": "FIFA World Cup 2026",
-            "venue": "SoFi Stadium",
-        }]
+        games = [
+            {
+                "home": "USA",
+                "away": "Mexico",
+                "sport": "worldcup",
+                "status": "PRE",
+                "kickoff": "2026-06-19T03:00:00Z",
+                "competition": "FIFA World Cup 2026",
+                "venue": "SoFi Stadium",
+            }
+        ]
         m = find_match(games, "Mexico")
         assert m is not None
         assert m.sport == "worldcup"
@@ -88,21 +93,25 @@ class TestFindMatch:
 
 class TestExtractRichContent:
     def test_fmhy_links(self):
-        sources = [{
-            "name": "fmhy",
-            "url": "https://fmhy.net/video",
-            "data": {"links": [{"text": "Cineby", "href": "https://cineby.app"}]},
-        }]
+        sources = [
+            {
+                "name": "fmhy",
+                "url": "https://fmhy.net/video",
+                "data": {"links": [{"text": "Cineby", "href": "https://cineby.app"}]},
+            }
+        ]
         out = extract_rich_content(sources)
         assert len(out["where_to_watch_links"]) == 1
         assert out["where_to_watch_links"][0]["text"] == "Cineby"
 
     def test_primary_structured(self):
-        sources = [{
-            "name": "primary",
-            "url": "https://example.com",
-            "data": [{"raw": "USA vs Mexico preview context"}],
-        }]
+        sources = [
+            {
+                "name": "primary",
+                "url": "https://example.com",
+                "data": [{"raw": "USA vs Mexico preview context"}],
+            }
+        ]
         out = extract_rich_content(sources)
         assert any("preview context" in s for s in out["form"])
 
@@ -136,6 +145,7 @@ class TestAggregator:
     def test_source_urls_built_for_all_sports(self):
         # Every SPORTS key should have at least a 'primary' source URL
         from clawplay.live_scores import SPORTS
+
         for sport in SPORTS:
             assert sport in SOURCE_URLS, f"missing source urls for {sport}"
             assert "primary" in SOURCE_URLS[sport]
@@ -144,18 +154,25 @@ class TestAggregator:
 class TestRenderMatchReport:
     def _match_with_sources(self, status="PRE"):
         m = MatchReport(
-            "worldcup", "USA", "Mexico",
+            "worldcup",
+            "USA",
+            "Mexico",
             kickoff="2026-06-19T03:00:00Z",
-            status=status, competition="FIFA World Cup 2026",
+            status=status,
+            competition="FIFA World Cup 2026",
             venue="SoFi Stadium",
         )
         if status in ("FT", "FINAL") or status == "1H":
             m.home_score, m.away_score = "0", "1"
         m.add_source("primary", "https://example.com", [{"raw": "context", "numbers": []}])
-        m.add_source("fmhy", "https://fmhy.net/video", {
-            "links": [{"text": "Cineby", "href": "https://cineby.app"}],
-            "raw": "Live Sports section",
-        })
+        m.add_source(
+            "fmhy",
+            "https://fmhy.net/video",
+            {
+                "links": [{"text": "Cineby", "href": "https://cineby.app"}],
+                "raw": "Live Sports section",
+            },
+        )
         m.add_note("aggregated from 2 sources")
         return m
 
@@ -173,6 +190,7 @@ class TestRenderMatchReport:
         html = render_match_report(m)
         # Countdown is rendered as "Xd Yh" or "Yh Zm" or "Zm"
         import re
+
         assert re.search(r"\d+[dhm]", html) or "KICKOFF" in html or "TBD" in html
 
     def test_recap_renders_handout(self):
