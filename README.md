@@ -18,8 +18,8 @@
     <a href="#"><img alt="No API keys" src="https://img.shields.io/badge/API%20keys-not%20required-blue.svg" /></a></p>
     <p><a href="https://github.com/tylerdotai/clawplay">clawplay</a> pulls live scoreboards, match previews, recaps, and live trackers for 24+ sports. Everything renders to self-contained, dark-themed HTML — mobile-first by default, with handout-quality print sheets matching the ClawPlex design system.</p>
     <p>No API keys. No rate limits. No scraping detective work. Just <code>pip install -e .</code> and go.</p>
-    <p><img src="examples/preview.png" alt="Preview" /></p>
-    <p><em>Pre-game preview with Tale of the Tape, Vegas Lines, Narrative Stack, Injury Report, X-Factors, and interactive Fan Poll — sourced live from Goal.com / ESPN / BBC / FMHY / Wikipedia.</em></p>
+    <p><img src="examples/preview.png" alt="Preview report — handout-quality dark theme" />
+    <em>Pre-game preview — Tale of the Tape, Vegas Lines, Narrative Stack, Injury Report, X-Factors, interactive Fan Poll. 8.5×11&quot; print sheet ready.</em></p>
     <hr />
     <h2>Contents</h2>
     <ul>
@@ -165,10 +165,18 @@ write_match_report(match, 'usa_mexico.html')
 </code></pre>
     <hr />
     <h2>Screenshots</h2>
-    <p><img src="examples/preview.png" alt="Scoreboard preview" />
-    <em>Live scoreboard — dark theme, pulsing live dot, sport grouping</em></p>
-    <p><img src="examples/preview_match.png" alt="Match preview" />
-    <em>Match preview — handout-quality 8.5×11 sheet, Georgia serif headlines, colored shadow cards, FMHY-sourced where-to-watch</em></p>
+    <h3>Pre-game preview</h3>
+    <p><img src="examples/preview.png" alt="Preview report — handout-quality dark theme" />
+    <em>Pre-game preview — Tale of the Tape, Vegas Lines, Narrative Stack, Injury Report, X-Factors, interactive Fan Poll. 8.5×11&quot; print sheet ready.</em></p>
+    <h3>Live tracker</h3>
+    <p><img src="examples/live.png" alt="Live tracker — pulsing mega-scoreboard, WP bars, play-by-play" />
+    <em>Live tracker — pulsing mega-scoreboard, win-probability bars + sparkline, hot-player spotlight, color-tagged play-by-play feed.</em></p>
+    <h3>Post-game recap</h3>
+    <p><img src="examples/recap.png" alt="Post-game recap — MVP hero, AI verdict, box score, turning points" />
+    <em>Post-game recap — MVP hero card, AI-generated Verdict, tabbed box score, 3 turning points with win-probability deltas, Fan Verdict sliders.</em></p>
+    <h3>Franchise hub</h3>
+    <p><img src="examples/hub.png" alt="Franchise hub — standings, rumor mill, fantasy, countdown" />
+    <em>Franchise hub — NFC East standings, trade &amp; rumor mill (verified / developing / speculation), fantasy + lookahead betting lines, social buzz feed, prominent countdown.</em></p>
     <hr />
     <h2>Roadmap</h2>
     <ul>

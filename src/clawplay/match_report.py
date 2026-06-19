@@ -237,10 +237,9 @@ class Aggregator:
         if item.get("venue") and not match.venue:
             match.venue = item["venue"]
         nums = item.get("numbers") or []
-        if nums and (not match.home_score or not match.away_score):
-            if len(nums) >= 2:
-                match.away_score = str(nums[0])
-                match.home_score = str(nums[1])
+        if nums and len(nums) >= 2 and (not match.home_score or not match.away_score):
+            match.away_score = str(nums[0])
+            match.home_score = str(nums[1])
 
 
 # ---- JS templates ---------------------------------------------------------
@@ -400,11 +399,10 @@ def extract_rich_content(sources: List[Dict[str, Any]]) -> Dict[str, List[Any]]:
                 if item.get("raw"):
                     txt = item["raw"] if isinstance(item["raw"], str) else " ".join(item["raw"])
                     out["form"].append(f"[{name}] {txt[:240]}")
-        elif isinstance(data, dict):
-            if name != "fmhy":
-                for k, v in data.items():
-                    if k in out and k != "where_to_watch_links" and v:
-                        out[k].append(f"[{name}] {str(v)[:240]}")
+        elif isinstance(data, dict) and name != "fmhy":
+            for k, v in data.items():
+                if k in out and k != "where_to_watch_links" and v:
+                    out[k].append(f"[{name}] {str(v)[:240]}")
     for k in out:
         if k != "where_to_watch_links":
             out[k] = out[k][:3]
