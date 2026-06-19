@@ -1,0 +1,42 @@
+/* clawplay v1.1.0 — Tailwind input. Compiled to templates/dist/styles.css. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Page background gradient — the ClawPlex DNA radial wash. */
+@layer base {
+  body {
+    background: radial-gradient(
+        circle at 88% 4%,
+        rgba(37, 99, 235, 0.32),
+        transparent 30%
+      ),
+      radial-gradient(
+        circle at 0% 100%,
+        rgba(220, 38, 38, 0.22),
+        transparent 28%
+      ),
+      linear-gradient(135deg, #050505 0%, #0a0a0a 45%, #0d111b 100%);
+    color: #fafafa;
+    font-feature-settings: "ss01", "cv11";
+  }
+}
+
+/* Reusable component classes shared across templates. */
+@layer components {
+  .card {
+    @apply border border-white/10 bg-surface p-6;
+  }
+  .card-red {
+    @apply border border-white/10 bg-surface shadow-card-red;
+  }
+  .card-blue {
+    @apply border border-white/10 bg-surface shadow-card-blue;
+  }
+  .label {
+    @apply font-mono text-[10px] tracking-[.16em] uppercase;
+  }
+  .display {
+    @apply font-display leading-[.9] tracking-tight;
+  }
+}
