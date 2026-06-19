@@ -1,129 +1,323 @@
 <!-- clawplay — Handout-quality sports reports for 24+ sports -->
 
+# clawplay
+
 <p align="center">
   <a href="https://github.com/tylerdotai/clawplay/blob/main/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-blue.svg" /></a>
   <a href="#"><img alt="Python 3.9+" src="https://img.shields.io/badge/python-3.9+-blue.svg" /></a>
   <a href="#"><img alt="Sports 24+" src="https://img.shields.io/badge/sports-24+-blue.svg" /></a>
   <a href=".github/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/badge/CI-passing-blue.svg" /></a>
   <a href="#"><img alt="No API keys" src="https://img.shields.io/badge/API%20keys-not%20required-blue.svg" /></a>
+  <a href="#"><img alt="Tests 108" src="https://img.shields.io/badge/tests-108%20passing-brightgreen.svg" /></a>
 </p>
 
 <p align="center"><strong>Handout-quality sports reports for 24+ sports — previews, live trackers, recaps, and franchise hubs.</strong></p>
-<p align="center">Pure HTML, dark-themed, print-ready. No API keys.</p>
+<p align="center">Pure HTML, dark-themed, print-ready. No API keys. Self-hosted web UI.</p>
 
-[clawplay](https://github.com/tylerdotai/clawplay) pulls live scoreboards, match previews, recaps, and live trackers for 24+ sports. Everything renders to self-contained, dark-themed HTML — mobile-first by default, with handout-quality print sheets matching the ClawPlex design system.
+<p align="center"><img src="examples/clips/preview.gif" alt="clawplay preview report demo" width="900" /></p>
+
+[clawplay](https://github.com/tylerdotai/clawplay) pulls live scoreboards, match previews, recaps, and live trackers for **21 sports**. Every report renders to a self-contained, dark-themed HTML file — mobile-first by default, with handout-quality print sheets matching the ClawPlex design system.
 
 No API keys. No rate limits. No scraping detective work. Just `pip install -e .` and go.
 
-<p align="center"><img src="examples/preview.png" alt="Preview report — handout-quality dark theme" />
-<br /><em>Pre-game preview — Tale of the Tape, Vegas Lines, Narrative Stack, Injury Report, X-Factors, interactive Fan Poll. 8.5×11" print sheet ready.</em></p>
+---
+
+## What's new in v1.1.0
+
+The v1.0.0 roadmap shipped as real features in this release:
+
+- ⚡ **Tailwind build pipeline** — compiled CSS replaces the CDN hot-link, so reports render fully offline.
+- 🎨 **Configurable team palettes** — 21 per-sport palettes (NBA red, NHL orange, NFL navy, etc.) load from a YAML registry. No shared colorway.
+- 🌐 **Self-hosted web UI** — `clawplay-server` serves all 4 templates on port 9300 with JSON APIs. `pip install -e ".[server]"` and `curl http://localhost:9300/health`.
+- 📊 **Live data wiring** — every template now bootstraps from `/api/...` and falls back to mock data if the API is unreachable.
+- ⚽ **xG chart for soccer** — inline SVG cumulative expected-goal trajectory with goal-event markers.
+- 🏈 **SVG NFL drive diagrams** — 110-yard field with run/pass/score markers from real ESPN play-by-play.
+- 📡 **ESPN play-by-play extractor** — unauthenticated, 24h-cached, with mock-data fallback.
+- 🏆 **Sleeper fantasy sync** — full NFL player DB with waiver-target filter (no auth, no key).
+- 🎬 **Demo clips** — 4 short MP4/GIF animations embedded in this README showing each mode end-to-end.
+
+**Still excluded** (per user direction): push notifications (Discord / iMessage / SMS).
 
 ---
 
-## Contents
+## Table of contents
 
-- [About](#about)
-- [Built With](#built-with)
-- [Installation](#installation)
-- [Usage](#usage)
-- [The Four Report Modes](#the-four-report-modes)
+- [Quick start](#quick-start)
+- [Demo](#demo)
+- [The four report modes](#the-four-report-modes)
 - [Screenshots](#screenshots)
-- [Per-Sport Design Specs](#per-sport-design-specs)
+- [Web UI](#web-ui)
+- [Charts](#charts)
+- [Per-sport design specs](#per-sport-design-specs)
 - [Roadmap](#roadmap)
+- [CLI reference](#cli-reference)
+- [Python library](#python-library)
+- [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
 ---
 
-## About
-
-**clawplay** is a sports aggregator with four report modes:
-
-1. **PRE-GAME PREVIEW** — Tale of the Tape, Vegas lines, narrative stack, injury report with impact scores, positional X-factor matchups, interactive fan poll. *Handout-quality print sheet (8.5×11").*
-2. **LIVE TRACKER** — Mega-scoreboard, live win-probability bar with sparkline timeline, side-by-side live stats, hot player spotlight, scrolling play-by-play feed with color-coded importance tags. *Pulsing neon live indicator.*
-3. **POST-GAME RECAP** — Final score hero with MVP card, AI-generated "Verdict" summary, interactive box score with team tabs, 3 game-changing moments with win-prob deltas, fan verdict slider. *Premium digital magazine layout.*
-4. **FRANCHISE HUB** — Live league standings with wild-card cutoff, trade & rumor mill (verified/developing/speculation), fantasy waiver targets + lookahead betting lines, social buzz feed, prominent countdown to next game. *Midweek digest format.*
-
-All four modes are **single-file HTML** with Tailwind CDN, native JavaScript, and realistic mock data — no API keys required. The Python package renders dark-themed, mobile-first scoreboards and pre-game / post-game match reports that aggregate from multiple sources (Goal.com, ESPN, BBC Sport, FMHY, Wikipedia).
-
----
-
-## Built With
-
-- [Python 3.9+](https://www.python.org/) — core language
-- [Playwright](https://playwright.dev/) — headless browser via clawplay HTTP client
-- [FastAPI](https://fastapi.tiangolo.com/) — optional: run your own browser service
-- [Tailwind CSS](https://tailwindcss.com/) (CDN) — premium HTML templates
-- [Goal.com](https://www.goal.com/), [ESPN](https://www.espn.com/), [BBC Sport](https://www.bbc.com/sport), [FMHY.net](https://fmhy.net/), [Wikipedia](https://en.wikipedia.org/) — data sources
-- [pytest](https://pytest.org/) + [ruff](https://github.com/astral-sh/ruff) — testing + linting
-
-The visual design language is the ClawPlex design system — dark, premium, no orange, Georgia display headlines + Karla body + JetBrains Mono labels, hard-offset colored shadows, radial-gradient page backgrounds, mono uppercase tracking labels. Inspired by the Spark Arlington 06/10 meetup handouts.
-
----
-
-## Installation
+## Quick start
 
 ```bash
 git clone https://github.com/tylerdotai/clawplay.git
 cd clawplay
 pip install -e .
 
-# Optional dev deps (tests, lint, server)
-pip install -e ".[dev]"
+# Optional: dev deps (tests, lint) + server deps (FastAPI, Playwright)
+pip install -e ".[dev,server]"
+
+# Verify install
+clawplay-live nba                  # JSON to stdout
+clawplay-report nba --output nba.html   # full HTML report
 ```
 
-Set the browser service URL (default `http://localhost:9300`):
+Set the timezone (default is `America/Chicago`):
 
 ```bash
-export CLAWPLAY_URL="http://localhost:9300"
+export CLAWPLAY_TZ="America/New_York"
 ```
-
-Or run your own — any FastAPI + Playwright service that exposes `/health`, `/eval`, `/extract`, `/screenshot`.
 
 ---
 
-## Usage
+## Demo
 
-### CLI — live scoreboards
+Four short clips showing each report mode in action:
+
+<p align="center">
+  <strong>Preview · USA vs Mexico</strong><br/>
+  <img src="examples/clips/preview.gif" alt="preview demo" width="600" />
+</p>
+
+<p align="center">
+  <strong>Live · Mexico vs USA, 78'</strong><br/>
+  <img src="examples/clips/live.gif" alt="live demo" width="600" />
+</p>
+
+<p align="center">
+  <strong>Recap · Mexico 1 – 0 USA</strong><br/>
+  <img src="examples/clips/recap.gif" alt="recap demo" width="600" />
+</p>
+
+<p align="center">
+  <strong>Hub · Dallas Cowboys</strong><br/>
+  <img src="examples/clips/hub.gif" alt="hub demo" width="600" />
+</p>
+
+Raw MP4s and per-mode static screenshots live under [`examples/`](examples/). Generated by [`scripts/render_demo_clips.py`](scripts/render_demo_clips.py) and [`scripts/render_screenshots.py`](scripts/render_screenshots.py) — open-source Playwright + ffmpeg.
+
+---
+
+## The four report modes
+
+| Mode | File | What it shows |
+| --- | --- | --- |
+| **PREVIEW** | [`templates/preview.html`](templates/preview.html) | Pre-game Tale of the Tape, Vegas lines, narrative stack, injury report with severity tags, X-Factor battles, interactive Fan Poll. |
+| **LIVE** | [`templates/live.html`](templates/live.html) | Mega-scoreboard with pulsing live indicator, win-probability timeline + sparkline, side-by-side live stats (xG, shots, possession), hot-player spotlight, color-coded play-by-play feed. |
+| **RECAP** | [`templates/recap.html`](templates/recap.html) | Final-score hero with MVP card, AI Verdict summary, tabbed box score, 3 turning points with WP deltas, Fan Verdict sliders, NFL drive diagram. |
+| **HUB** | [`templates/hub.html`](templates/hub.html) | League standings, Trade & Rumor Mill (verified/developing/speculation), fantasy waiver targets + lookahead betting lines, social buzz feed, prominent game countdown. |
+
+Open any of them locally — no build step required (they ship as self-contained single-file HTML):
 
 ```bash
-# Generate a live scoreboard for any sport
+open templates/preview.html   # macOS
+```
+
+---
+
+## Screenshots
+
+Static PNG renders for README embedding and docs use:
+
+<p align="center">
+  <img src="examples/preview.png" alt="Preview report" width="800" />
+</p>
+<p align="center"><em>Preview — Tale of the Tape, Vegas Lines, Narrative Stack, Injury Report, X-Factors, Fan Poll</em></p>
+
+<p align="center">
+  <img src="examples/live.png" alt="Live tracker" width="800" />
+</p>
+<p align="center"><em>Live — pulsing mega-scoreboard, WP bars + sparkline, hot-player spotlight, color-tagged play-by-play</em></p>
+
+<p align="center">
+  <img src="examples/recap.png" alt="Recap report" width="800" />
+</p>
+<p align="center"><em>Recap — MVP hero, AI Verdict, tabbed box score, turning points, Fan Verdict, drive diagram</em></p>
+
+<p align="center">
+  <img src="examples/hub.png" alt="Hub report" width="800" />
+</p>
+<p align="center"><em>Hub — NFC East standings, trade & rumor mill, fantasy + betting lines, social buzz, countdown</em></p>
+
+Print-sheet variants (`examples/{name}_print.png`) are also available — each template prints cleanly on 8.5×11".
+
+---
+
+## Web UI
+
+Run a self-hosted server and browse the templates in your browser:
+
+```bash
+pip install -e ".[server]"           # adds FastAPI + uvicorn + playwright
+clawplay-server                      # boots on http://127.0.0.1:9300
+```
+
+Then visit:
+
+- `http://127.0.0.1:9300/` — landing page with links
+- `http://127.0.0.1:9300/preview/worldcup/USA/Mexico` — preview template
+- `http://127.0.0.1:9300/live/worldcup/Mexico/USA` — live template
+- `http://127.0.0.1:9300/recap/worldcup/Mexico/USA` — recap template
+- `http://127.0.0.1:9300/hub/dallas_cowboys` — hub template
+- `http://127.0.0.1:9300/health` — `{"status":"ok",...}`
+- `http://127.0.0.1:9300/api/live/worldcup/Mexico/USA` — JSON payload
+
+The server injects a `<script id="clawplay-data" type="application/json">` block into each template, so the existing JS bootstrap can hydrate sections in place. If the API is unreachable, the embedded mock data renders instead.
+
+Environment overrides:
+
+```bash
+export CLAWPLAY_HOST=0.0.0.0         # bind all interfaces (LAN-accessible)
+export CLAWPLAY_PORT=8080            # change port
+export CLAWPLAY_MOCK=1               # force mock data, skip live aggregation
+```
+
+---
+
+## Charts
+
+Two inline-SVG chart components ship with v1.1.0:
+
+### xG timeline (soccer)
+
+```python
+from clawplay.charts import xg_timeline_svg
+
+svg = xg_timeline_svg(
+    home_team="USA",
+    home_color="#1e40af",
+    away_team="Mexico",
+    away_color="#dc2626",
+    points=[(0, 0.0), (15, 0.1), (45, 0.5), (75, 0.8), (90, 1.2)],
+)
+```
+
+Renders a cumulative expected-goal trajectory with goal-event markers as filled circles. Self-contained inline SVG — embeds directly into any HTML page.
+
+### NFL drive diagram
+
+```python
+from clawplay.charts import drive_diagram_svg
+
+svg = drive_diagram_svg([
+    {"type": "run",  "yard_start": 25, "yard_end": 30, "score": False},
+    {"type": "pass", "yard_start": 30, "yard_end": 60, "score": False},
+    {"type": "pass", "yard_start": 60, "yard_end": 100, "score": True},
+])
+```
+
+110-yard field grid with run = triangle, pass = circle, score = star.
+
+---
+
+## Per-sport design specs
+
+Each of the 21 sports has its own `design.md` spec — color palette, typography, section order, mock-data schema, vocabulary, visual motifs, tone. They don't share a colorway. The shared editorial standard lives in [`templates/MASTER_PROMPT.md`](templates/MASTER_PROMPT.md); the per-sport overrides live under [`templates/designs/`](templates/designs/).
+
+Available specs: [NFL](templates/designs/nfl.md) · [NBA](templates/designs/nba.md) · [NHL](templates/designs/nhl.md) · [MLB](templates/designs/mlb.md) · [MLS](templates/designs/mls.md) · [WNBA](templates/designs/wnba.md) · [CFB](templates/designs/cfb.md) · [CBB](templates/designs/cbb.md) · [CBB_W](templates/designs/cbb_w.md) · [EPL](templates/designs/epl.md) · [UCL](templates/designs/ucl.md) · [La Liga](templates/designs/laliga.md) · [Bundesliga](templates/designs/bundes.md) · [Serie A](templates/designs/seriea.md) · [World Cup](templates/designs/worldcup.md) · [Soccer Live](templates/designs/soccer_live.md) · [UFC](templates/designs/ufc.md) · [Tennis](templates/designs/tennis.md) · [Golf](templates/designs/golf.md) · [Cricket](templates/designs/cricket.md) · [Rugby](templates/designs/rugby.md)
+
+Authoritative palette data lives in [`src/clawplay/_palette_registry.yaml`](src/clawplay/_palette_registry.yaml).
+
+---
+
+## Roadmap
+
+### Shipped in v1.1.0 (this release)
+
+- [x] Multi-source aggregator (Goal.com + ESPN + BBC + FMHY + Wikipedia)
+- [x] Handout-quality match reports (8.5×11 print sheet)
+- [x] Four report templates (Preview · Live · Recap · Hub)
+- [x] CST/DFW timezone formatting throughout
+- [x] pytest TDD · ruff lint · GitHub Actions CI
+- [x] MIT license, public on GitHub
+- [x] `templates/MASTER_PROMPT.md` — shared editorial standard
+- [x] `templates/designs/*.md` — per-sport design specs (21 sports)
+- [x] Tailwind build pipeline (compiled CSS, no CDN)
+- [x] Configurable team palettes (YAML registry, no shared colorway)
+- [x] Self-hosted web UI (`clawplay-server` on port 9300)
+- [x] Live data wired into all 4 templates (mock fallback)
+- [x] xG chart for soccer (inline SVG)
+- [x] SVG play diagrams for NFL (inline SVG)
+- [x] NFL ESPN play-by-play extractor (24h cache, mock fallback)
+- [x] Sleeper fantasy sync (no auth, 24h cache)
+- [x] Demo clips (4 MP4s + GIFs)
+
+### Deferred to v1.2.0+
+
+- [ ] Push notifications (Discord / iMessage / SMS) — **explicitly out of scope per user**
+- [ ] WebSocket real-time scoreboard updates
+- [ ] User accounts + saved preferences
+- [ ] Mobile native apps
+- [ ] Internationalization beyond English
+- [ ] Paid API integrations (SportsDataIO, Odds API, etc.)
+
+See [open issues](https://github.com/tylerdotai/clawplay/issues) for the full backlog.
+
+---
+
+## CLI reference
+
+### Live scoreboards (`clawplay-report`)
+
+```bash
 clawplay-report nba --output nba.html
 clawplay-report worldcup --output wc.html
 clawplay-report all --output today.html --group-by status
-
-# Filter, customize, dump JSON
 clawplay-report epl --find "Arsenal" --output arsenal.html --title "Arsenal watch"
 clawplay-report nfl --group-by competition --json
 ```
 
-### CLI — match reports (preview / recap)
+### Match reports (`clawplay-match`)
 
 ```bash
-# Pre-game preview for a specific game
 clawplay-match "USA Mexico" --sport worldcup --output usa_mexico_preview.html
-
-# Post-game recap
 clawplay-match "Mexico Korea Republic" --sport worldcup --output mexico_korea_recap.html
-
-# Skip live aggregation (faster, less rich)
 clawplay-match "USA Mexico" --sport worldcup --no-aggregate --output preview_static.html
 ```
 
-### CLI — raw JSON to stdout
+### Raw JSON (`clawplay-live`)
 
 ```bash
-clawplay-live nba           # all NBA games today, JSON
-clawplay-live soccer_live   # all live soccer matches globally
-clawplay-live all           # everything
-clawplay-live find "Lakers"   # find a specific team
+clawplay-live nba                    # all NBA games today
+clawplay-live soccer_live            # all live soccer matches globally
+clawplay-live all                    # everything
+clawplay-live find "Lakers"          # find a specific team
 ```
 
-### Python library
+### Asset build (`clawplay-build-assets`)
+
+```bash
+clawplay-build-assets                # one-shot Tailwind compile
+clawplay-build-assets --watch        # rebuild on template change
+```
+
+### Web server (`clawplay-server`)
+
+```bash
+clawplay-server                      # 127.0.0.1:9300
+clawplay-server --host 0.0.0.0       # LAN-accessible
+clawplay-server --port 8080
+```
+
+---
+
+## Python library
 
 ```python
 import clawplay
+from clawplay import Aggregator, MatchReport, write_match_report
 
 # Live scoreboards
 nba = clawplay.scores.nba_today()
@@ -136,8 +330,6 @@ if result['found_in']:
     print(f"Found in {result['found_in']}: {result['game']}")
 
 # Match reports with multi-source aggregation
-from clawplay import MatchReport, Aggregator, write_match_report
-
 match = MatchReport(
     'worldcup', 'USA', 'Mexico',
     kickoff='2026-06-21T20:00:00-05:00',
@@ -145,92 +337,41 @@ match = MatchReport(
     competition='FIFA World Cup 2026',
     venue='SoFi Stadium, Inglewood',
 )
-Aggregator().aggregate_match(match)   # pulls from ESPN + BBC + FMHY + Wikipedia
+Aggregator().aggregate_match(match)
 write_match_report(match, 'usa_mexico.html')
-```
 
-### Local timezone
+# Per-sport palettes
+from clawplay.palettes import palette_for, palette_for_team
+nfl_pal = palette_for('nfl')
+cowboys_pal = palette_for_team('nfl', 'dallas_cowboys')
+print(cowboys_pal.css_vars())
 
-All times render in **CST/CDT (America/Chicago)** by default. Override via env var:
+# Inline SVG charts
+from clawplay.charts import xg_timeline_svg, drive_diagram_svg
+svg_xg = xg_timeline_svg('USA', '#1e40af', 'Mexico', '#dc2626', points=[])
+with open('xg.svg', 'w') as f:
+    f.write(svg_xg)
 
-```bash
-export CLAWPLAY_TZ="America/New_York"
+# NFL play-by-play (real ESPN data with mock fallback)
+from clawplay.espn import nfl_play_by_play, top_waiver_targets
+plays = nfl_play_by_play('401547417')  # Super Bowl LVII event id
+print(f"{len(plays)} plays from ESPN")
+waivers = top_waiver_targets(position='WR', count=5)
+for p in waivers:
+    print(f"  {p['first_name']} {p['last_name']} ({p['position']}, {p['team']})")
 ```
 
 ---
 
-## The Four Report Modes
+## Configuration
 
-Located under `templates/`. Each is a single self-contained HTML file with Tailwind CDN + native JS. Open in any browser.
-
-| Mode | File | Use case |
+| Env var | Default | What it does |
 | --- | --- | --- |
-| **PREVIEW** | [templates/preview.html](templates/preview.html) | Pre-game hype sheet · Tale of the Tape · Vegas odds · Fan poll |
-| **LIVE** | [templates/live.html](templates/live.html) | Live tracker · Score · Win probability · Play-by-play |
-| **RECAP** | [templates/recap.html](templates/recap.html) | Post-game analytics · MVP · Box score · Fan verdict |
-| **HUB** | [templates/hub.html](templates/hub.html) | Midweek digest · Standings · Rumors · Fantasy · Countdown |
-
-Open any of them locally — no build step:
-
-```bash
-open templates/preview.html   # macOS
-```
-
----
-
-## Screenshots
-
-### Pre-game preview
-
-<img src="examples/preview.png" alt="Preview report — handout-quality dark theme" />
-*Pre-game preview — Tale of the Tape, Vegas Lines, Narrative Stack, Injury Report, X-Factors, interactive Fan Poll. 8.5×11" print sheet ready.*
-
-### Live tracker
-
-<img src="examples/live.png" alt="Live tracker — pulsing mega-scoreboard, WP bars, play-by-play" />
-*Live tracker — pulsing mega-scoreboard, win-probability bars + sparkline, hot-player spotlight, color-tagged play-by-play feed.*
-
-### Post-game recap
-
-<img src="examples/recap.png" alt="Post-game recap — MVP hero, AI verdict, box score, turning points" />
-*Post-game recap — MVP hero card, AI-generated Verdict, tabbed box score, 3 turning points with win-probability deltas, Fan Verdict sliders.*
-
-### Franchise hub
-
-<img src="examples/hub.png" alt="Franchise hub — standings, rumor mill, fantasy, countdown" />
-*Franchise hub — NFC East standings, trade & rumor mill (verified / developing / speculation), fantasy + lookahead betting lines, social buzz feed, prominent countdown.*
-
----
-
-## Per-Sport Design Specs
-
-Each of the 22 sports has its own `design.md` spec — color palette, typography, section order, mock-data schema, vocabulary, visual motifs, tone. They don't share a colorway. The shared editorial standard lives in [templates/MASTER_PROMPT.md](templates/MASTER_PROMPT.md); the per-sport overrides live under [templates/designs/](templates/designs/).
-
-Available specs: [NFL](templates/designs/nfl.md) · [NBA](templates/designs/nba.md) · [NHL](templates/designs/nhl.md) · [MLB](templates/designs/mlb.md) · [MLS](templates/designs/mls.md) · [WNBA](templates/designs/wnba.md) · [CFB](templates/designs/cfb.md) · [CBB](templates/designs/cbb.md) · [CBB_W](templates/designs/cbb_w.md) · [EPL](templates/designs/epl.md) · [UCL](templates/designs/ucl.md) · [La Liga](templates/designs/laliga.md) · [Bundesliga](templates/designs/bundes.md) · [Serie A](templates/designs/seriea.md) · [World Cup](templates/designs/worldcup.md) · [Soccer Live](templates/designs/soccer_live.md) · [UFC](templates/designs/ufc.md) · [Tennis](templates/designs/tennis.md) · [Golf](templates/designs/golf.md) · [Cricket](templates/designs/cricket.md) · [Rugby](templates/designs/rugby.md)
-
----
-
-## Roadmap
-
-- [x] Multi-source aggregator (Goal.com + ESPN + BBC + FMHY + Wikipedia)
-- [x] Handout-quality match reports (8.5×11 print sheet)
-- [x] Four report templates (Preview · Live · Recap · Hub)
-- [x] CST/DFW timezone formatting throughout
-- [x] pytest TDD · ruff lint · GitHub Actions CI
-- [x] MIT license, public on GitHub
-- [x] `templates/MASTER_PROMPT.md` — shared editorial standard
-- [x] `templates/designs/*.md` — per-sport design specs (22 sports)
-- [ ] Live data wired into all 4 HTML templates (currently mock)
-- [ ] Configurable team colors (currently ClawPlex palette)
-- [ ] Tailwind build pipeline (currently CDN)
-- [ ] Interactive SVG play diagrams (NFL)
-- [ ] xG-style charts for soccer
-- [ ] Push to Discord / iMessage / SMS
-- [ ] NFL play-by-play via ESPN API reverse-engineered
-- [ ] Self-hosted web UI (Flask/FastAPI)
-- [ ] Fantasy sync (Sleeper, Yahoo, ESPN)
-
-See [open issues](https://github.com/tylerdotai/clawplay/issues) for the full backlog.
+| `CLAWPLAY_TZ` | `America/Chicago` | All times render in this timezone (IANA name). |
+| `CLAWPLAY_URL` | `http://localhost:9300` | Default browser service URL for the `Clawplay` HTTP client. |
+| `CLAWPLAY_HOST` | `127.0.0.1` | Bind interface for `clawplay-server`. |
+| `CLAWPLAY_PORT` | `9300` | Port for `clawplay-server`. |
+| `CLAWPLAY_MOCK` | unset | When `1`, force mock data and skip live aggregation (used by demo clip renderer). |
 
 ---
 
@@ -240,19 +381,21 @@ PRs welcome. The flow:
 
 1. Fork & branch from `main`
 2. `pip install -e ".[dev]"`
-3. Add tests under `tests/`
-4. `pytest` · `ruff check src/ tests/`
+3. Add tests under `tests/` (we aim for 100+ tests per release)
+4. `pytest` · `ruff check src/ tests/` · `ruff format --check src/ tests/`
 5. Submit a PR — CI runs on every push
 
 For new sports:
 
 1. Find the official scoreboard URL
 2. Open it in Chrome, inspect the live-widget DOM
-3. Write a JS extraction pattern (see existing sports in `src/clawplay/live_scores.py`)
+3. Write a JS extraction pattern (see `src/clawplay/live_scores.py`)
 4. Add to `SPORTS` and a `<sport>_today()` method to `LiveScores`
-5. Add tests with mock `Clawplay`
+5. Add a palette block in `src/clawplay/_palette_registry.yaml`
+6. Write a `design.md` spec under `templates/designs/`
+7. Add tests with a mocked browser service
 
-For new templates, model the structure off `templates/preview.html` — Georgia display + mono labels + hard-offset colored shadows + radial-gradient bg are non-negotiable design tokens.
+For new charts: add an inline SVG function under `src/clawplay/charts.py` with full docstring + tests.
 
 ---
 
@@ -264,10 +407,14 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for the full text.
 
 ## Acknowledgments
 
-- [Playwright](https://playwright.dev/) — headless browser engine
+- [Playwright](https://playwright.dev/) — headless browser engine (renders + screenshots)
+- [ffmpeg](https://ffmpeg.org/) — demo-clip composition (libx264)
+- [Tailwind CSS](https://tailwindcss.com/) — utility CSS
+- [FastAPI](https://fastapi.tiangolo.com/) + [uvicorn](https://www.uvicorn.org/) — web UI
 - [ESPN](https://www.espn.com/), [Goal.com](https://www.goal.com/), [BBC Sport](https://www.bbc.com/sport), [FMHY.net](https://fmhy.net/), [Wikipedia](https://en.wikipedia.org/) — data sources
+- [Sleeper](https://sleeper.com/) — unauthenticated fantasy player DB
 - [othneildrew's Best-README-Template](https://github.com/othneildrew/Best-README-Template) — README structure
-- [ClawPlex design system](https://github.com/tylerdotai/clawplex) — visual language (dark, premium, no orange)
+- [ClawPlex design system](https://github.com/tylerdotai/clawplex) — visual language (dark, premium)
 - Spark Coworking · Arlington TX — June 10 meetup · inspiration for handout typography
 - Built for sports fans who want their scores on their terms
 

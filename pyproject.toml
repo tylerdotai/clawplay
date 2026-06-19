@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clawplay"
-version = "1.0.0"
-description = "Sports aggregator with handout-quality HTML reports — previews, recaps, live scoreboards for 20+ sports."
+version = "1.1.0"
+description = "Sports aggregator with handout-quality HTML reports — previews, recaps, live scoreboards for 21+ sports."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -44,7 +44,8 @@ dev = [
     "fastapi>=0.100",
     "uvicorn>=0.23",
     "pyyaml>=6.0",
-]
+    "httpx>=0.27",  # for TestClient in tests
+]  # fmt: skip
 server = [
     "playwright>=1.40",
     "fastapi>=0.100",
@@ -60,6 +61,8 @@ Issues = "https://github.com/tylerdotai/clawplay/issues"
 clawplay-report = "clawplay.report:_cli_entry"
 clawplay-match  = "clawplay.match_report:_cli_entry"
 clawplay-live   = "clawplay.live_scores:main"
+clawplay-build-assets = "clawplay.assets:_cli_entry"
+clawplay-server = "clawplay.server:_cli_entry"
 
 [tool.setuptools.packages.find]
 where = ["src"]

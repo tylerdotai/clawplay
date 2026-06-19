@@ -19,20 +19,34 @@ CLI:
 
 from __future__ import annotations
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 from . import time_utils  # noqa: F401
+from .assets import build_css, css_path  # noqa: F401
+from .charts import drive_diagram_svg, xg_timeline_svg  # noqa: F401
 from .clawplay import Clawplay, ClawplayError, health  # noqa: F401
+from .espn import (  # noqa: F401
+    MockNFLPlayByPlay,
+    fantasy_players_sleeper,
+    nfl_play_by_play,
+    top_waiver_targets,
+)
 from .live_scores import SPORTS, LiveScores, scores  # noqa: F401
-from .match_report import (
+from .match_report import (  # noqa: F401
     Aggregator,
     MatchReport,
     extract_rich_content,
     find_match,
     render_match_report,
     write_match_report,
-)  # noqa: F401
-from .report import (
+)
+from .palettes import (  # noqa: F401
+    Palette,
+    palette_for,
+    palette_for_team,
+    register_team,
+)
+from .report import (  # noqa: F401
     ACCENT_BLUE,
     ACCENT_BLUE_LIGHT,
     BG_PAGE,
@@ -50,7 +64,8 @@ from .report import (
     render_css,
     render_report,
     write_report,
-)  # noqa: F401
+)
+from .server import create_app  # noqa: F401
 
 __all__ = [
     "__version__",
@@ -72,6 +87,20 @@ __all__ = [
     "Clawplay",
     "ClawplayError",
     "health",
+    # v1.1.0 additions
+    "Palette",
+    "palette_for",
+    "palette_for_team",
+    "register_team",
+    "xg_timeline_svg",
+    "drive_diagram_svg",
+    "nfl_play_by_play",
+    "fantasy_players_sleeper",
+    "top_waiver_targets",
+    "MockNFLPlayByPlay",
+    "build_css",
+    "css_path",
+    "create_app",
     # design tokens (re-exported so consumers can match the look)
     "ACCENT_BLUE",
     "ACCENT_BLUE_LIGHT",

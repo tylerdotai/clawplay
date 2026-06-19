@@ -1,0 +1,239 @@
+# clawplay — per-sport palette registry.
+# Authoritative source for `clawplay.palettes.palette_for(sport)`.
+# Each sport gets its own color palette (no shared colorway).
+# Hex values. The "no orange" rule from the ClawPlex brand system
+# applies to ClawPlex marketing surfaces, NOT to per-sport palettes —
+# when a sport's official brand identity includes orange (NHL, WNBA,
+# La Liga, NBA Lakers, etc.) we honor the league's colors.
+# Schema: hex strings, primary/secondary required, rest optional.
+
+nfl:
+  primary: "#013369"      # NFL navy
+  secondary: "#d50a0a"    # signal red
+  accent: "#869397"       # silver
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+nba:
+  primary: "#c8102e"      # NBA red
+  secondary: "#1d428a"    # NBA blue
+  accent: "#fdb927"       # warm gold (NBA brand gold)
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+nhl:
+  primary: "#000000"      # ice black
+  secondary: "#ff6b00"    # NHL orange (official brand)
+  accent: "#a6192e"       # burgundy
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+mlb:
+  primary: "#002d72"      # MLB blue
+  secondary: "#bf0d3e"    # MLB red
+  accent: "#e8aa00"       # mustard
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+mls:
+  primary: "#001e62"      # MLS navy
+  secondary: "#c8102e"    # red
+  accent: "#00a651"       # pitch green
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+wnba:
+  primary: "#ff6600"      # WNBA orange (official brand)
+  secondary: "#1d428a"    # navy
+  accent: "#e63946"       # coral red
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+cfb:
+  primary: "#3b0a45"      # deep maroon
+  secondary: "#caa057"    # collegiate gold
+  accent: "#000000"       # black
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+cbb:
+  primary: "#154734"      # dark green
+  secondary: "#f1b82d"    # maize
+  accent: "#ffffff"       # white
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+cbb_w:
+  primary: "#862633"      # cardinal
+  secondary: "#000000"    # black
+  accent: "#eeb111"       # sun gold
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+epl:
+  primary: "#3d195b"      # EPL purple
+  secondary: "#00ff85"    # cyber green
+  accent: "#ffffff"       # white
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+ucl:
+  primary: "#001d63"      # UCL navy
+  secondary: "#0e368c"    # mid blue
+  accent: "#d4af37"       # UEFA gold
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+laliga:
+  primary: "#ee8707"      # La Liga orange (official brand)
+  secondary: "#8b0000"    # deep red
+  accent: "#ffd700"       # gold
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+bundes:
+  primary: "#d20515"      # Bundesliga red
+  secondary: "#ffffff"    # white
+  accent: "#000000"       # black
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+seriea:
+  primary: "#008fd7"      # Serie A blue
+  secondary: "#1f1f1f"    # dark grey
+  accent: "#ffffff"       # white
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+worldcup:
+  primary: "#9b1b30"      # FIFA burgundy
+  secondary: "#0066b2"    # FIFA blue
+  accent: "#fccb05"       # FIFA yellow
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+soccer_live:
+  primary: "#0a7e3a"      # pitch green
+  secondary: "#fafafa"    # white
+  accent: "#1a1a1a"       # net black
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+ufc:
+  primary: "#d20a11"      # UFC red
+  secondary: "#000000"    # black
+  accent: "#bf9b30"       # octagon gold
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+tennis:
+  primary: "#ccff00"      # tennis ball yellow
+  secondary: "#0a4d2e"    # court green
+  accent: "#fafafa"       # chalk white
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+golf:
+  primary: "#0a6e3d"      # Augusta green
+  secondary: "#f5deb3"    # wheat
+  accent: "#ffd700"       # trophy gold
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+cricket:
+  primary: "#0a3a2e"      # pitch dark green
+  secondary: "#d4af37"    # test gold
+  accent: "#ffffff"       # ball white
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
+
+rugby:
+  primary: "#1a1a1a"      # scrum black
+  secondary: "#ffffff"    # lineout white
+  accent: "#c8102e"       # try red
+  text: "#fafafa"
+  muted: "#a3a3a3"
+  surface: "#0a0a0a"
+  raised: "#131313"
+  background: "#050505"
+  border: "#262626"
